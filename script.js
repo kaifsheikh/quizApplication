@@ -1,3 +1,6 @@
+/* =========================================================
+   FINAL script.js – Name input + Printable Report (PDF)
+   ========================================================= */
 const TOTAL_SECONDS = 30 * 60; // overall quiz timer: 30 minutes
 
 const state = {
@@ -6,7 +9,8 @@ const state = {
   answers: [],
   overallTimeLeft: TOTAL_SECONDS,
   overallInterval: null,
-  locked: false
+  locked: false,
+  userName: ""          // stores user's name
 };
 
 const card = document.getElementById('card');
@@ -25,6 +29,7 @@ function renderStart(){
   brandStatus.textContent = 'Ready';
   overallTimerEl.classList.remove('active','warn','danger');
   clearInterval(state.overallInterval);
+  state.userName = "";   // reset name on restart
   const q = QUIZ_DATA.questions.length;
   card.innerHTML = `
     <div class="start">
@@ -36,10 +41,25 @@ function renderStart(){
         <div class="meta-chip">⏱ <b>30 min</b>&nbsp;total time</div>
         <div class="meta-chip">◆ Real-time&nbsp;scoring</div>
       </div>
+      <!-- Name input -->
+      <div class="name-field">
+        <input type="text" id="userNameInput" placeholder="Enter your name" autocomplete="off" />
+      </div>
       <button class="btn" id="startBtn">Start Quiz →</button>
     </div>
   `;
-  document.getElementById('startBtn').addEventListener('click', startQuiz);
+
+  document.getElementById('startBtn').addEventListener('click', () => {
+    const nameInput = document.getElementById('userNameInput');
+    const name = nameInput.value.trim();
+    if (name === '') {
+      alert('Please enter your name to start.');
+      nameInput.focus();
+      return;
+    }
+    state.userName = name;
+    startQuiz();
+  });
 }
 
 function startQuiz(){
@@ -70,8 +90,6 @@ function tickOverall(){
 }
 
 function forceFinishOnTimeout(){
-  // Mark current question as unanswered if not yet locked, then
-  // mark every remaining question as not-attempted (ran out of time).
   const total = QUIZ_DATA.questions.length;
   for(let i = state.answers.length; i < total; i++){
     const q = QUIZ_DATA.questions[i];
@@ -170,6 +188,125 @@ function goNext(){
   }
 }
 
+/* ========== PRINT TO PDF REPORT ========== */
+function downloadReport() {
+  const total = QUIZ_DATA.questions.length;
+  const timeUsed = TOTAL_SECONDS - Math.max(state.overallTimeLeft, 0);
+  const pct = Math.round((state.score / total) * 100);
+
+  // HTML page that will be printed
+  const reportHTML = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Quiz Report - ${escapeHtml(state.userName)}</title>
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+          font-family: 'Inter', sans-serif;
+          padding: 40px;
+          color: #111;
+          background: #fff;
+          max-width: 720px;
+          margin: 0 auto;
+        }
+        h1 { font-size: 28px; margin-bottom: 4px; }
+        .meta { color: #555; margin-bottom: 20px; font-size: 14px; }
+        .score-box {
+          display: flex; gap: 20px;
+          background: #f4f4f4; padding: 16px; border-radius: 8px;
+          margin-bottom: 28px;
+          font-size: 14px;
+        }
+        .score-box div span { font-weight: 700; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 13px; }
+        th { background: #f9f9f9; }
+        .correct { color: #2e7d32; font-weight: 600; }
+        .wrong { color: #c62828; font-weight: 600; }
+        .timeout { color: #e65100; font-weight: 600; }
+        .badge {
+          display: inline-block;
+          padding: 2px 8px;
+          border-radius: 4px;
+          font-size: 11px;
+          font-weight: 600;
+          background: #eee;
+          margin-left: 6px;
+        }
+      </style>
+    </head>
+    <body>
+      <h1>📋 Python Quiz Report</h1>
+      <div class="meta">
+        <strong>Name:</strong> ${escapeHtml(state.userName)}<br/>
+        <strong>Date:</strong> ${new Date().toLocaleString()}<br/>
+        <strong>Time Used:</strong> ${formatTime(timeUsed)}
+      </div>
+      <div class="score-box">
+        <div>✅ Correct: <span>${state.score}</span></div>
+        <div>❌ Wrong: <span>${state.answers.filter(a => !a.isCorrect && !a.timedOut).length}</span></div>
+        <div>⏭️ Skipped: <span>${state.answers.filter(a => a.selected === null).length}</span></div>
+        <div>📊 Score: <span>${pct}% (${state.score}/${total})</span></div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Question</th>
+            <th>Your Answer</th>
+            <th>Correct Answer</th>
+            <th>Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${state.answers.map((a, i) => {
+            const answer = a.selected === null ? '— no answer —' : a.options[a.selected];
+            const correct = a.options[a.correctIndex];
+            let resultClass = '';
+            let resultText = '';
+            if (a.timedOut) {
+              resultClass = 'timeout';
+              resultText = 'Time out';
+            } else if (a.isCorrect) {
+              resultClass = 'correct';
+              resultText = 'Correct';
+            } else {
+              resultClass = 'wrong';
+              resultText = 'Wrong';
+            }
+            return `
+              <tr>
+                <td>${i+1}</td>
+                <td>${escapeHtml(a.question)} <span class="badge">${a.difficulty}</span></td>
+                <td>${escapeHtml(answer)}</td>
+                <td>${escapeHtml(correct)}</td>
+                <td class="${resultClass}">${resultText}</td>
+              </tr>
+            `;
+          }).join('')}
+        </tbody>
+      </table>
+      <p style="margin-top: 20px; font-size: 12px; color: #999;">Generated by Python Quiz App</p>
+      <script>
+        window.onload = () => window.print();
+      </script>
+    </body>
+    </html>
+  `;
+
+  const printWindow = window.open('', '_blank', 'width=800,height=600');
+  if (!printWindow) {
+    alert('Please allow pop-ups for this site to download the report.');
+    return;
+  }
+  printWindow.document.write(reportHTML);
+  printWindow.document.close();
+}
+
 function renderResult(){
   brandStatus.textContent = 'Complete';
   overallTimerEl.classList.remove('active');
@@ -223,11 +360,13 @@ function renderResult(){
         `).join('')}
       </div>
       <div class="actions">
+        <button class="btn ghost" id="downloadBtn">📥 Download Report</button>
         <button class="btn ghost" id="restartBtn">Restart</button>
       </div>
     </div>
   `;
   document.getElementById('restartBtn').addEventListener('click', renderStart);
+  document.getElementById('downloadBtn').addEventListener('click', downloadReport);
 }
 
 function escapeHtml(str){
