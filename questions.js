@@ -1,15 +1,3 @@
-/* =========================================================
-   PYTHON QUIZ QUESTIONS
-   Edit this file to change/add questions. Loaded directly by
-   quiz.html via <script src="questions.js"> — works even when
-   you just double-click quiz.html, no server needed.
-
-   Each question needs:
-     question   -> string
-     options    -> array of 4 strings
-     correct    -> index (0-3) of the right option
-     difficulty -> "easy" | "medium" | "hard"
-   ========================================================= */
 const QUIZ_DATA = {
   title: "Python Quiz",
   subtitle: "Easy, medium aur hard — mix of Python questions. Answer before the ring runs out.",

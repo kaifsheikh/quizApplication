@@ -1,5 +1,5 @@
 /* =========================================================
-   FINAL script.js – Name input + Printable Report (PDF)
+   FINAL script.js – with Login + One‑attempt logic
    ========================================================= */
 const TOTAL_SECONDS = 30 * 60; // overall quiz timer: 30 minutes
 
@@ -10,7 +10,7 @@ const state = {
   overallTimeLeft: TOTAL_SECONDS,
   overallInterval: null,
   locked: false,
-  userName: ""          // stores user's name
+  userName: ""          // stores user's name (comes from login)
 };
 
 const card = document.getElementById('card');
@@ -19,17 +19,77 @@ const overallTimerEl = document.getElementById('overallTimer');
 const overallTimerText = document.getElementById('overallTimerText');
 const letters = ['A','B','C','D','E','F'];
 
+/* ---------- Helper ---------- */
 function formatTime(sec){
   const m = Math.floor(sec / 60);
   const s = sec % 60;
   return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 }
 
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+/* ---------- Login screen ---------- */
+function renderLogin(errorMsg = '') {
+  brandStatus.textContent = 'Login';
+  overallTimerEl.classList.remove('active');
+  clearInterval(state.overallInterval);
+
+  card.innerHTML = `
+    <div class="login-box">
+      <h2>Quiz Login</h2>
+      ${errorMsg ? `<p class="login-error">${errorMsg}</p>` : ''}
+      <input type="text" id="loginUsername" placeholder="Username" autocomplete="off">
+      <input type="password" id="loginPassword" placeholder="Password">
+      <button class="btn" id="loginBtn">Login</button>
+    </div>
+  `;
+
+// Inside renderLogin() – button click handler mein yeh badlega:
+document.getElementById('loginBtn').addEventListener('click', async () => {
+  const username = document.getElementById('loginUsername').value.trim();
+  const password = document.getElementById('loginPassword').value.trim();
+  if (!username || !password) {
+    renderLogin('Please fill both fields.');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      // Check already completed
+      if (localStorage.getItem(`quizCompleted_${username}`)) {
+        renderLogin('You have already completed the quiz. Contact your teacher.');
+        return;
+      }
+      // Login success
+      sessionStorage.setItem('loggedInUser', username);
+      state.userName = username;
+      renderStart();
+    } else {
+      renderLogin('Invalid username or password.');
+    }
+  } catch (err) {
+    renderLogin('Error connecting to server. Try again.');
+  }
+});
+}
+
+/* ---------- Start screen (after login) ---------- */
 function renderStart(){
   brandStatus.textContent = 'Ready';
   overallTimerEl.classList.remove('active','warn','danger');
   clearInterval(state.overallInterval);
-  state.userName = "";   // reset name on restart
+
   const q = QUIZ_DATA.questions.length;
   card.innerHTML = `
     <div class="start">
@@ -41,23 +101,12 @@ function renderStart(){
         <div class="meta-chip">⏱ <b>30 min</b>&nbsp;total time</div>
         <div class="meta-chip">◆ Real-time&nbsp;scoring</div>
       </div>
-      <!-- Name input -->
-      <div class="name-field">
-        <input type="text" id="userNameInput" placeholder="Enter your name" autocomplete="off" />
-      </div>
+      <p style="margin-top:12px; color:var(--muted);">Logged in as <b>${escapeHtml(state.userName)}</b></p>
       <button class="btn" id="startBtn">Start Quiz →</button>
     </div>
   `;
 
   document.getElementById('startBtn').addEventListener('click', () => {
-    const nameInput = document.getElementById('userNameInput');
-    const name = nameInput.value.trim();
-    if (name === '') {
-      alert('Please enter your name to start.');
-      nameInput.focus();
-      return;
-    }
-    state.userName = name;
     startQuiz();
   });
 }
@@ -194,7 +243,6 @@ function downloadReport() {
   const timeUsed = TOTAL_SECONDS - Math.max(state.overallTimeLeft, 0);
   const pct = Math.round((state.score / total) * 100);
 
-  // HTML page that will be printed
   const reportHTML = `
     <!DOCTYPE html>
     <html lang="en">
@@ -312,6 +360,10 @@ function renderResult(){
   overallTimerEl.classList.remove('active');
   clearInterval(state.overallInterval);
 
+  // ⛔ Mark this user as completed – prevents reattempt
+  const user = state.userName;
+  localStorage.setItem(`quizCompleted_${user}`, 'true');
+
   const total = QUIZ_DATA.questions.length;
   const pct = Math.round((state.score / total) * 100);
   const wrong = state.answers.filter(a => !a.isCorrect && !a.timedOut).length;
@@ -361,23 +413,51 @@ function renderResult(){
       </div>
       <div class="actions">
         <button class="btn ghost" id="downloadBtn">📥 Download Report</button>
-        <button class="btn ghost" id="restartBtn">Restart</button>
+        <button class="btn ghost" id="logoutBtn">🔒 Logout</button>
       </div>
     </div>
   `;
-  document.getElementById('restartBtn').addEventListener('click', renderStart);
+
   document.getElementById('downloadBtn').addEventListener('click', downloadReport);
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    sessionStorage.removeItem('loggedInUser');
+    window.location.reload();  // goes back to login
+  });
+  // ❌ Restart button completely removed – student cannot retake
 }
 
-function escapeHtml(str){
-  const d = document.createElement('div');
-  d.textContent = str;
-  return d.innerHTML;
-}
-
+/* ==========================================
+   Entry point – page load
+   ========================================== */
 if(typeof QUIZ_DATA === 'undefined'){
   brandStatus.textContent = 'Error';
   card.innerHTML = `<div class="error-state">Could not find questions.js — make sure it is saved in the same folder as this file.</div>`;
-}else{
-  renderStart();
+} else {
+  const loggedInUser = sessionStorage.getItem('loggedInUser');
+  if (loggedInUser) {
+    // Check if already completed
+    if (localStorage.getItem(`quizCompleted_${loggedInUser}`)) {
+      // Show completed message – cannot retake
+      brandStatus.textContent = 'Completed';
+      card.innerHTML = `
+        <div class="login-box">
+          <h2>Quiz Already Submitted</h2>
+          <p>Hello <b>${escapeHtml(loggedInUser)}</b>, you have already completed the quiz.</p>
+          <p style="color:var(--muted);">Contact your teacher if you think this is a mistake.</p>
+          <button class="btn ghost" id="forceLogoutBtn">🔒 Logout</button>
+        </div>
+      `;
+      document.getElementById('forceLogoutBtn').addEventListener('click', () => {
+        sessionStorage.removeItem('loggedInUser');
+        window.location.reload();
+      });
+    } else {
+      // Not yet completed, set name and go to start screen
+      state.userName = loggedInUser;
+      renderStart();
+    }
+  } else {
+    // No login session – show login screen
+    renderLogin();
+  }
 }
