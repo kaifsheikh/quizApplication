@@ -10,103 +10,123 @@ const QUIZ_DATA = {
       difficulty: "easy"
     },
     {
-      question: "Which of these is used to create a comment in Python?",
-      options: ["//", "<!-- -->", "#", "/* */"],
-      correct: 2,
+      question: "Which symbol is used for comments in Python?",
+      options: ["//", "#", "/* */", "<!-- -->"],
+      correct: 1,
       difficulty: "easy"
     },
     {
       question: "What is the correct file extension for Python files?",
-      options: [".pt", ".py", ".pyt", ".pyth"],
+      options: [".py", ".python", ".pt", ".exe"],
+      correct: 0,
+      difficulty: "easy"
+    },
+    {
+      question: "Which function is used to display output in Python?",
+      options: ["echo()", "print()", "display()", "show()"],
       correct: 1,
       difficulty: "easy"
     },
     {
-      question: "Which data type is immutable in Python?",
-      options: ["List", "Dictionary", "Set", "Tuple"],
-      correct: 3,
-      difficulty: "easy"
-    },
-    {
-      question: "What will len('Python') return?",
-      options: ["5", "6", "7", "Error"],
+      question: "Which function is used to take input from the user?",
+      options: ["read()", "input()", "scan()", "get()"],
       correct: 1,
       difficulty: "easy"
     },
     {
-      question: "What is the output of 3 // 2 in Python?",
-      options: ["1.5", "1", "2", "Error"],
+      question: "Which data type is used to store text?",
+      options: ["int", "float", "string", "bool"],
+      correct: 2,
+      difficulty: "easy"
+    },
+    {
+      question: "Which operator is used for addition?",
+      options: ["+", "-", "*", "/"],
+      correct: 0,
+      difficulty: "easy"
+    },
+    {
+      question: "Which operator checks if two values are equal?",
+      options: ["=", "==", "!=", ">"],
       correct: 1,
+      difficulty: "easy"
+    },
+    {
+      question: "Which keyword is used for a conditional statement?",
+      options: ["loop", "if", "when", "check"],
+      correct: 1,
+      difficulty: "easy"
+    },
+    {
+      question: "Which keyword is used with if when another condition needs to be checked?",
+      options: ["else if", "elseif", "elif", "then"],
+      correct: 2,
+      difficulty: "easy"
+    },
+    {
+      question: "Which loop is commonly used to iterate over a list?",
+      options: ["for", "repeat", "loop", "until"],
+      correct: 0,
+      difficulty: "medium"
+    },
+    {
+      question: "Which loop continues running while a condition is True?",
+      options: ["for", "while", "repeat", "do"],
+      correct: 1,
+      difficulty: "medium"
+    },
+    {
+      question: "Which keyword exits a loop immediately?",
+      options: ["stop", "break", "exit", "continue"],
+      correct: 1,
+      difficulty: "medium"
+    },
+    {
+      question: "Which keyword skips the current iteration of a loop?",
+      options: ["skip", "continue", "break", "pass"],
+      correct: 1,
+      difficulty: "medium"
+    },
+    {
+      question: "Which data structure stores multiple values in Python?",
+      options: ["List", "Integer", "Float", "Boolean"],
+      correct: 0,
       difficulty: "medium"
     },
     {
       question: "Which method adds an item to the end of a list?",
-      options: ["list.add()", "list.append()", "list.insert()", "list.push()"],
+      options: ["add()", "append()", "push()", "insertEnd()"],
       correct: 1,
       difficulty: "medium"
     },
     {
-      question: "What does the self keyword represent in a Python class?",
+      question: "What does len() return?",
       options: [
-        "A reference to the class itself",
-        "A reference to the current instance of the class",
-        "A built-in Python module",
-        "A static variable"
+        "The first value",
+        "The number of items",
+        "The last value",
+        "The data type"
       ],
       correct: 1,
       difficulty: "medium"
     },
     {
-      question: "Which of the following creates a virtual environment in Python?",
-      options: ["python -env", "python -m venv env", "pip venv env", "python create venv"],
+      question: "Which function converts a string into an integer?",
+      options: ["str()", "int()", "float()", "bool()"],
       correct: 1,
       difficulty: "medium"
     },
     {
-      question: "What is the output of list(range(2, 10, 3))?",
-      options: ["[2, 5, 8]", "[2, 3, 4]", "[2, 5, 8, 10]", "[3, 6, 9]"],
+      question: "Which keyword sends a value back from a function?",
+      options: ["return", "print", "yield", "send"],
       correct: 0,
       difficulty: "medium"
     },
     {
-      question: "What does the yield keyword do in Python?",
-      options: [
-        "Ends a function immediately",
-        "Turns a function into a generator that returns values lazily",
-        "Raises an exception",
-        "Declares a global variable"
-      ],
+      question: "What is the output of print(5 + 3)?",
+      options: ["53", "8", "35", "Error"],
       correct: 1,
-      difficulty: "hard"
-    },
-    {
-      question: "What is the average time complexity of looking up a key in a Python dictionary?",
-      options: ["O(n)", "O(log n)", "O(1)", "O(n log n)"],
-      correct: 2,
-      difficulty: "hard"
-    },
-    {
-      question: "What will [x for x in range(5) if x % 2 == 0] produce?",
-      options: ["[0, 2, 4]", "[1, 3]", "[0, 1, 2, 3, 4]", "[2, 4]"],
-      correct: 0,
-      difficulty: "hard"
-    },
-    {
-      question: "What does Python's GIL (Global Interpreter Lock) primarily restrict?",
-      options: [
-        "Multiple processes from running at once",
-        "Only one thread from executing Python bytecode at a time",
-        "Access to global variables",
-        "Import of external modules"
-      ],
-      correct: 1,
-      difficulty: "hard"
-    },
-    {
-      question: "What is the output of sum([1, 2, 3], -6)?",
-      options: ["6", "0", "-6", "Error"],
-      correct: 1,
-      difficulty: "hard"
+      difficulty: "easy"
     }
   ]
 };

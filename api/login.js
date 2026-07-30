@@ -1,8 +1,10 @@
 // api/login.js
 // Yeh array hi aapki "credentials list" hai – server‑side safe.
 const USERS = [
-  { username: "kaif", password: "kaif12" },
-  { username: "dayan", password: "dayan12" }
+  { username: "zarmeen", password: "zarmeen12" },
+  { username: "sanam", password: "sanam12" },
+  { username: "neha", password: "neha12" },
+  { username: "kaif", password: "kaif12" }
 ];
 
 export default function handler(req, res) {
