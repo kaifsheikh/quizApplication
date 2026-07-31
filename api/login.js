@@ -3,8 +3,13 @@
 const USERS = [
   { username: "zarmeen", password: "zarmeen12" },
   { username: "sanam", password: "sanam12" },
+  { username: "sania", password: "sania12" },
   { username: "neha", password: "neha12" },
-  { username: "kaif", password: "kaif12" }
+  { username: "kaif", password: "kaif12" },
+  { username: "amang", password: "amang12" },
+  { username: "anaya", password: "anaya12" },
+  { username: "nitesh", password: "nitesh12" },
+  { username: "jayesh", password: "jayesh12" },
 ];
 
 export default function handler(req, res) {
