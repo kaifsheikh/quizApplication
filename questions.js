@@ -127,6 +127,186 @@ const QUIZ_DATA = {
       options: ["53", "8", "35", "Error"],
       correct: 1,
       difficulty: "easy"
+    },
+        {
+      question: "Which method removes the last item from a list?",
+      options: ["remove()", "delete()", "pop()", "clear()"],
+      correct: 2,
+      difficulty: "medium"
+    },
+    {
+      question: "Which function returns the type of a variable?",
+      options: ["type()", "typeof()", "kind()", "class()"],
+      correct: 0,
+      difficulty: "medium"
+    },
+    {
+      question: "Which keyword is used to create a class in Python?",
+      options: ["object", "class", "define", "new"],
+      correct: 1,
+      difficulty: "medium"
+    },
+    {
+      question: "Which keyword is used to handle exceptions?",
+      options: ["catch", "try", "handle", "except"],
+      correct: 1,
+      difficulty: "medium"
+    },
+    {
+      question: "Which block is executed if an exception occurs?",
+      options: ["finally", "except", "catch", "error"],
+      correct: 1,
+      difficulty: "medium"
+    },
+    {
+      question: "Which keyword is used to import a module?",
+      options: ["include", "using", "import", "require"],
+      correct: 2,
+      difficulty: "medium"
+    },
+    {
+      question: "Which module is commonly used for mathematical operations?",
+      options: ["math", "random", "os", "time"],
+      correct: 0,
+      difficulty: "medium"
+    },
+    {
+      question: "Which module is used to generate random numbers?",
+      options: ["math", "random", "os", "time"],
+      correct: 1,
+      difficulty: "medium"
+    },
+    {
+      question: "Which method converts all characters in a string to uppercase?",
+      options: ["upper()", "uppercase()", "toUpper()", "capital()"],
+      correct: 0,
+      difficulty: "medium"
+    },
+    {
+      question: "Which method converts all characters in a string to lowercase?",
+      options: ["lower()", "lowercase()", "toLower()", "small()"],
+      correct: 0,
+      difficulty: "medium"
+    },
+    {
+      question: "Which method removes whitespace from both ends of a string?",
+      options: ["trim()", "strip()", "remove()", "clean()"],
+      correct: 1,
+      difficulty: "medium"
+    },
+    {
+      question: "Which keyword is used to create an anonymous function?",
+      options: ["func", "lambda", "anonymous", "def"],
+      correct: 1,
+      difficulty: "medium"
+    },
+    {
+      question: "Which function sorts a list and returns a new sorted list?",
+      options: ["sort()", "order()", "sorted()", "arrange()"],
+      correct: 2,
+      difficulty: "medium"
+    },
+    {
+      question: "Which list method sorts the original list?",
+      options: ["sorted()", "sort()", "arrange()", "order()"],
+      correct: 1,
+      difficulty: "medium"
+    },
+    {
+      question: "Which function returns the largest value in a list?",
+      options: ["largest()", "max()", "high()", "top()"],
+      correct: 1,
+      difficulty: "medium"
+    },
+    {
+      question: "Which function returns the smallest value in a list?",
+      options: ["lowest()", "small()", "min()", "least()"],
+      correct: 2,
+      difficulty: "medium"
+    },
+    {
+      question: "Which keyword is used to define a generator function?",
+      options: ["return", "yield", "generate", "next"],
+      correct: 1,
+      difficulty: "medium"
+    },
+    {
+      question: "Which function is used to open a file?",
+      options: ["file()", "open()", "read()", "load()"],
+      correct: 1,
+      difficulty: "medium"
+    },
+    {
+      question: "Which mode is used to read a file?",
+      options: ["r", "w", "a", "x"],
+      correct: 0,
+      difficulty: "medium"
+    },
+    {
+      question: "Which mode is used to append data to a file?",
+      options: ["r", "w", "a", "x"],
+      correct: 2,
+      difficulty: "medium"
+    },
+    {
+      question: "Which keyword is used to inherit from another class?",
+      options: ["extends", "inherits", "()", "super"],
+      correct: 2,
+      difficulty: "medium"
+    },
+    {
+      question: "Which function converts a value to a float?",
+      options: ["float()", "decimal()", "real()", "number()"],
+      correct: 0,
+      difficulty: "medium"
+    },
+    {
+      question: "Which built-in function returns a sequence of numbers?",
+      options: ["range()", "list()", "seq()", "numbers()"],
+      correct: 0,
+      difficulty: "medium"
+    },
+    {
+      question: "Which operator is used for exponentiation?",
+      options: ["^", "**", "//", "%"],
+      correct: 1,
+      difficulty: "medium"
+    },
+    {
+      question: "Which operator returns the remainder after division?",
+      options: ["/", "//", "%", "**"],
+      correct: 2,
+      difficulty: "medium"
+    },
+    {
+      question: "Which operator performs floor division?",
+      options: ["/", "//", "%", "**"],
+      correct: 1,
+      difficulty: "medium"
+    },
+    {
+      question: "Which collection stores unique values only?",
+      options: ["List", "Tuple", "Set", "Dictionary"],
+      correct: 2,
+      difficulty: "medium"
+    },
+    {
+      question: "Which collection stores key-value pairs?",
+      options: ["List", "Tuple", "Dictionary", "Set"],
+      correct: 2,
+      difficulty: "medium"
+    },
+    {
+      question: "Which dictionary method returns all keys?",
+      options: ["keys()", "values()", "items()", "getKeys()"],
+      correct: 0,
+      difficulty: "medium"
+    },
+    {
+      question: "Which dictionary method returns all values?",
+      options: ["keys()", "values()", "items()", "getValues()"],
+      correct: 1,
+      difficulty: "medium"
     }
   ]
 };
